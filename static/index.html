@@ -1,0 +1,308 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>EcRoom</title>
+    <link rel="stylesheet" href="/styles.css?v=20260523b" />
+  </head>
+  <body>
+    <div id="app">
+      <div class="layout-root">
+        <aside id="sidebar" class="sidebar is-expanded">
+          <div class="sidebar-top">
+            <div class="sidebar-brand-row">
+              <button id="collapseSidebarButton" class="icon-button" type="button" title="折叠侧边栏">☰</button>
+              <div class="sidebar-label-wrapper sidebar-brand-wrapper">
+                <div class="sidebar-brand">
+                  <div class="sidebar-brand-title">EcRoom</div>
+                  <div class="sidebar-brand-subtitle">内容创作协作系统</div>
+                </div>
+              </div>
+            </div>
+
+            <button id="newChatButton" class="new-chat-button" type="button">
+              <span class="new-chat-icon icon-wrapper">✚</span>
+              <span class="sidebar-label-wrapper new-chat-label-wrapper">
+                <span class="new-chat-label label">新建对话</span>
+              </span>
+            </button>
+
+            <div class="sidebar-nav">
+              <button class="sidebar-nav-button is-active" data-view="create" type="button">
+                <span class="sidebar-label-wrapper">
+                  <span class="label">聊天</span>
+                </span>
+              </button>
+              <button class="sidebar-nav-button" data-view="inspiration" type="button">
+                <span class="sidebar-label-wrapper">
+                  <span class="label">灵感</span>
+                </span>
+              </button>
+              <button class="sidebar-nav-button" data-view="assets" type="button">
+                <span class="sidebar-label-wrapper">
+                  <span class="label">资产</span>
+                </span>
+              </button>
+            </div>
+          </div>
+
+          <div class="conversation-section">
+            <div class="section-label">
+              <span class="sidebar-label-wrapper">
+                <span class="label">最近</span>
+              </span>
+            </div>
+            <div id="historyList" class="conversation-list"></div>
+          </div>
+
+          <div class="sidebar-bottom">
+            <button id="accountButton" class="sidebar-footer-button" type="button">
+              <span class="sidebar-label-wrapper">
+                <span class="label">账号</span>
+              </span>
+            </button>
+            <button id="settingsButton" class="sidebar-footer-button" type="button">
+              <span class="sidebar-label-wrapper">
+                <span class="label">设置</span>
+              </span>
+            </button>
+          </div>
+        </aside>
+
+        <div id="mobileSidebarOverlay" class="mobile-sidebar-overlay"></div>
+
+        <main class="chat-shell">
+          <header class="main-topbar">
+            <div class="main-topbar-left">
+              <button id="mobileSidebarButton" class="icon-button mobile-only" type="button" title="打开侧边栏">☰</button>
+              <div id="mainTitle" class="main-title">开始一段新的创作对话</div>
+            </div>
+            <button id="toggleToolsButton" class="topbar-button" type="button">创作参数</button>
+          </header>
+
+          <div id="chatScrollRegion" class="chat-scroll-region">
+            <div id="chatThread" class="chat-thread"></div>
+          </div>
+
+          <div class="composer-region">
+            <div id="composerTools" class="composer-tools is-hidden">
+              <div class="composer-tools-header">
+                <div class="composer-tools-title">创作参数</div>
+                <button id="closeToolsButton" class="tools-close-button" type="button" aria-label="关闭创作参数">✕</button>
+              </div>
+
+              <div class="composer-tools-grid">
+                <label class="tool-field">
+                  <span>内容类型</span>
+                  <select id="contentType">
+                    <option value="短视频脚本">短视频脚本</option>
+                    <option value="公众号文章">公众号文章</option>
+                    <option value="产品文案">产品文案</option>
+                    <option value="角色设定">角色设定</option>
+                  </select>
+                </label>
+                <label class="tool-field">
+                  <span>目标受众</span>
+                  <input id="audience" type="text" placeholder="例如：B站用户、品牌主理人、小说读者" />
+                </label>
+                <label class="tool-field">
+                  <span>语气风格</span>
+                  <input id="tone" type="text" placeholder="例如：冷感、锐利、克制、亲近" />
+                </label>
+                <label class="tool-field">
+                  <span>长度要求</span>
+                  <select id="lengthHint">
+                    <option value="简短">简短</option>
+                    <option value="中等" selected>中等</option>
+                    <option value="详细">详细</option>
+                  </select>
+                </label>
+              </div>
+
+              <label class="tool-field tool-field-full">
+                <span>补充要求</span>
+                <textarea
+                  id="extraRequirements"
+                  rows="3"
+                  placeholder="例如：先稳住角色内核，再给出传播短版；避免套话；保留镜头感。"
+                ></textarea>
+              </label>
+
+              <div class="template-section">
+                <div class="template-section-header">
+                  <span>创作模板</span>
+                  <span id="selectedTemplateLabel" class="template-section-hint">未选择模板</span>
+                </div>
+                <div id="templateGrid" class="template-mini-grid"></div>
+              </div>
+            </div>
+
+            <div class="composer-status-row">
+              <div id="statusText" class="composer-status-text">等待输入</div>
+              <div class="composer-shortcuts">Enter 发送，Shift + Enter 换行</div>
+            </div>
+
+            <form id="composerForm" class="composer">
+              <textarea
+                id="composerInput"
+                rows="1"
+                placeholder="给 EcRoom 一个清晰的创作需求，或者继续修改当前稿件。"
+              ></textarea>
+
+              <div class="composer-toolbar">
+                <div class="composer-toolbar-left">
+                  <button id="quickInspirationButton" class="composer-chip" type="button">灵感页</button>
+                  <button id="quickAssetsButton" class="composer-chip" type="button">资产页</button>
+                </div>
+                <button id="sendButton" class="send-button" type="submit" aria-label="发送">↑</button>
+              </div>
+            </form>
+          </div>
+        </main>
+      </div>
+    </div>
+
+    <div id="settingsModal" class="modal-shell is-hidden" aria-hidden="true">
+      <div id="settingsBackdrop" class="modal-backdrop"></div>
+      <div class="modal-panel" role="dialog" aria-modal="true" aria-labelledby="settingsTitle">
+        <div class="modal-header">
+          <div>
+            <div id="settingsTitle" class="modal-title">设置</div>
+            <div class="modal-subtitle">手动切换快速模式和专家模式，并查看 DeepSeek 当前可用模型。</div>
+          </div>
+          <button id="closeSettingsButton" class="modal-close-button" type="button" aria-label="关闭设置">✕</button>
+        </div>
+
+        <div class="settings-section">
+          <div class="settings-section-title">生成模式</div>
+          <div class="mode-grid">
+            <button id="fastModeButton" class="mode-card" data-mode="fast" type="button">
+              <div class="mode-card-title">快速模式</div>
+              <div class="mode-card-copy">优先速度，默认调用 <code>deepseek-v4-flash</code></div>
+            </button>
+            <button id="expertModeButton" class="mode-card" data-mode="expert" type="button">
+              <div class="mode-card-title">专家模式</div>
+              <div class="mode-card-copy">优先质量，默认调用 <code>deepseek-v4-pro</code></div>
+            </button>
+          </div>
+        </div>
+
+        <div class="settings-section">
+          <div class="settings-kv">
+            <span>当前模式</span>
+            <strong id="currentModeLabel">快速模式</strong>
+          </div>
+          <div class="settings-kv">
+            <span>当前模型</span>
+            <strong id="currentModelLabel">deepseek-v4-flash</strong>
+          </div>
+          <div class="settings-kv">
+            <span>模型状态</span>
+            <strong id="modelStatusLabel">读取中</strong>
+          </div>
+        </div>
+
+        <div class="settings-section">
+          <div class="settings-section-title">当前可用模型</div>
+          <div id="modelList" class="model-list"></div>
+          <div id="modelError" class="model-error is-hidden"></div>
+        </div>
+
+        <div class="settings-section">
+          <div class="settings-section-title">自进化引擎</div>
+          <div class="settings-kv">
+            <span>反馈总数</span>
+            <strong id="evolutionFeedbackCount">—</strong>
+          </div>
+          <div class="settings-kv">
+            <span>进化日志</span>
+            <strong id="evolutionLogCount">—</strong>
+          </div>
+          <button id="triggerEvolutionButton" class="evolution-trigger-button" type="button">
+            触发自进化分析
+          </button>
+          <div id="evolutionResult" class="evolution-result is-hidden"></div>
+          <div id="evolutionApplyRow" class="evolution-apply-row is-hidden">
+            <button id="applyEvolutionButton" class="evolution-trigger-button" type="button" style="background:#2a2a2a;border-color:#555;">
+              应用到所有 Agent
+            </button>
+            <button id="resetPromptsButton" class="evolution-trigger-button" type="button" style="background:#1f1f1f;margin-top:8px;">
+              重置为出厂 Prompt
+            </button>
+          </div>
+        </div>
+
+        <div class="settings-section">
+          <div class="settings-section-title">模板管理</div>
+          <div id="templateManageList" class="template-manage-list"></div>
+          <button id="addTemplateButton" class="evolution-trigger-button" type="button">
+            新建模板
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div id="deleteModal" class="modal-shell is-hidden" aria-hidden="true">
+      <div id="deleteBackdrop" class="modal-backdrop"></div>
+      <div class="modal-panel modal-panel-compact" role="dialog" aria-modal="true" aria-labelledby="deleteTitle">
+        <div class="modal-header">
+          <div>
+            <div id="deleteTitle" class="modal-title">删除聊天</div>
+            <div id="deleteMessage" class="modal-subtitle">删除后无法恢复。</div>
+          </div>
+          <button id="closeDeleteButton" class="modal-close-button" type="button" aria-label="关闭删除弹窗">✕</button>
+        </div>
+        <div class="danger-note">该操作会永久删除这条聊天记录以及关联反馈。</div>
+        <div class="modal-actions">
+          <button id="cancelDeleteButton" class="secondary-action modal-secondary-button" type="button">取消</button>
+          <button id="confirmDeleteButton" class="danger-button" type="button">删除</button>
+        </div>
+      </div>
+    </div>
+
+    <div id="templateModal" class="modal-shell is-hidden" aria-hidden="true">
+      <div id="templateBackdrop" class="modal-backdrop"></div>
+      <div class="modal-panel" role="dialog" aria-modal="true" aria-labelledby="templateModalTitle">
+        <div class="modal-header">
+          <div>
+            <div id="templateModalTitle" class="modal-title">编辑模板</div>
+            <div class="modal-subtitle">修改模板的默认参数和创作提示。</div>
+          </div>
+          <button id="closeTemplateModalButton" class="modal-close-button" type="button">✕</button>
+        </div>
+        <label class="tool-field" style="margin-top:12px;">
+          <span>模板名称</span>
+          <input id="templateFormName" type="text" placeholder="例如：小红书种草文" />
+        </label>
+        <label class="tool-field" style="margin-top:12px;">
+          <span>内容类型</span>
+          <input id="templateFormType" type="text" placeholder="例如：小红书文案" />
+        </label>
+        <label class="tool-field" style="margin-top:12px;">
+          <span>描述</span>
+          <input id="templateFormDesc" type="text" placeholder="一句话描述模板用途" />
+        </label>
+        <div class="composer-tools-grid" style="margin-top:12px;">
+          <label class="tool-field"><span>默认语气</span><input id="templateFormTone" type="text" placeholder="例如：自然有劲" /></label>
+          <label class="tool-field"><span>默认受众</span><input id="templateFormAudience" type="text" placeholder="例如：小红书用户" /></label>
+        </div>
+        <label class="tool-field" style="margin-top:12px;">
+          <span>长度</span>
+          <select id="templateFormLength"><option value="简短">简短</option><option value="中等" selected>中等</option><option value="详细">详细</option></select>
+        </label>
+        <label class="tool-field tool-field-full" style="margin-top:12px;">
+          <span>创作提示（System Hint）</span>
+          <textarea id="templateFormHint" rows="3" placeholder="给 AI 的额外创作指导..."></textarea>
+        </label>
+        <div class="modal-actions">
+          <button id="templateDeleteButton" class="danger-button" type="button" style="margin-right:auto;">删除模板</button>
+          <button id="cancelTemplateButton" class="secondary-action modal-secondary-button" type="button">取消</button>
+          <button id="saveTemplateButton" class="secondary-action" type="button" style="background:#3a3a3a;">保存</button>
+        </div>
+      </div>
+    </div>
+
+    <script src="/app.js?v=20260605"></script>
+  </body>
+</html>

@@ -1,0 +1,52 @@
+[
+  {
+    "id": "tpl_short_video",
+    "name": "短视频脚本",
+    "content_type": "短视频脚本",
+    "description": "适合抖音/B站的口播脚本，强调节奏感和钩子",
+    "default_tone": "自然有劲",
+    "default_audience": "泛知识用户",
+    "default_length": "中等",
+    "system_hint": "开头3秒必须有钩子，中间有反转或信息增量，结尾有行动号召。"
+  },
+  {
+    "id": "tpl_wechat_article",
+    "name": "公众号文章",
+    "content_type": "公众号文章",
+    "description": "深度长文风格，适合微信生态阅读",
+    "default_tone": "专业亲切",
+    "default_audience": "专业读者",
+    "default_length": "详细",
+    "system_hint": "标题要有吸引力但不标题党，正文有逻辑层次，排版友好。"
+  },
+  {
+    "id": "tpl_product_copy",
+    "name": "产品文案",
+    "content_type": "产品文案",
+    "description": "品牌传播向的产品文案，强调卖点和调性",
+    "default_tone": "锐利克制",
+    "default_audience": "品牌主理人",
+    "default_length": "简短",
+    "system_hint": "一句话讲清核心卖点，避免堆砌形容词，保持品牌一致性。"
+  },
+  {
+    "id": "tpl_character_setting",
+    "name": "角色设定",
+    "content_type": "角色设定",
+    "description": "世界观角色的设定文案，要求有辨识度",
+    "default_tone": "冷感克制",
+    "default_audience": "二次元与剧情向用户",
+    "default_length": "中等",
+    "system_hint": "先建角色内核（欲望+缺口+行为），再写登场场景。"
+  },
+  {
+    "id": "tpl_novel_opening",
+    "name": "小说开头",
+    "content_type": "小说开头",
+    "description": "小说前三章/开头场景，快速建立世界观和人物弧光",
+    "default_tone": "细腻有张力",
+    "default_audience": "小说读者",
+    "default_length": "详细",
+    "system_hint": "第一句就要有悬念，快速建立世界观和主要冲突。"
+  }
+]
